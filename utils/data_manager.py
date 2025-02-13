@@ -51,3 +51,14 @@ def save_data():
     }
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2, default=str)
+
+def get_task_counter():
+    """Get current task counter"""
+    global task_counter
+    return task_counter
+
+def increment_task_counter():
+    """Increment task counter"""
+    global task_counter
+    task_counter += 1
+    return task_counter 
