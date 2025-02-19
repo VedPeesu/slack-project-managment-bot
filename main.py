@@ -59,3 +59,113 @@ logging.basicConfig(level=logging.DEBUG)
 
 scheduler = BackgroundScheduler()
 scheduler.start()
+
+load_data()
+
+@app.route('/create-task', methods=['POST'])
+def create_task_route():
+    return create_task()
+
+@app.route('/update-task', methods=['POST'])
+def update_task_route():
+    return update_task()
+
+@app.route('/task-status', methods=['POST'])
+def set_task_status_route():
+    return set_task_status()
+
+@app.route('/list-tasks', methods=['POST'])
+def list_tasks_route():
+    return list_tasks()
+
+@app.route('/assign-task', methods=['POST'])
+def assign_task_route():
+    return assign_task()
+
+@app.route('/unassign-task', methods=['POST'])
+def unassign_task_route():
+    return unassign_task()
+
+@app.route('/task-priority', methods=['POST'])
+def set_task_priority_route():
+    return set_task_priority()
+
+@app.route('/clear-tasks', methods=['POST'])
+def clear_tasks_route():
+    return clear_tasks()
+
+@app.route('/create-project', methods=['POST'])
+def create_project_route():
+    return create_project()
+
+@app.route('/project-progress', methods=['POST'])
+def update_project_progress_route():
+    return update_project_progress()
+
+@app.route('/create-project-summary', methods=['POST'])
+def create_project_summary_route():
+    return create_project_summary()
+
+@app.route('/list-project-summaries', methods=['POST'])
+def list_project_summaries_route():
+    return list_project_summaries()
+
+@app.route('/project-analytics', methods=['POST'])
+def get_project_analytics_route():
+    return get_project_analytics()
+
+@app.route('/add-team-member', methods=['POST'])
+def add_team_member_route():
+    return add_team_member()
+
+@app.route('/team-stats', methods=['POST'])
+def get_team_stats_route():
+    return get_team_stats()
+
+@app.route('/get-contact-info', methods=['POST'])
+def get_contact_info_route():
+    return get_contact_info()
+
+@app.route('/schedule-meeting', methods=['POST'])
+def schedule_meeting_route():
+    return schedule_meeting(client, scheduler)
+
+@app.route('/recurring-reminder', methods=['POST'])
+def set_recurring_reminder_route():
+    return set_recurring_reminder(client, scheduler)
+
+@app.route('/notify-me', methods=['POST'])
+def notify_me_route():
+    return notify_me(client, scheduler)
+
+@app.route('/set-reminder', methods=['POST'])
+def set_reminder_route():
+    return set_reminder(client)
+
+@app.route('/smart-notify', methods=['POST'])
+def smart_notify_route():
+    return smart_notify(client)
+
+@app.route('/add-file-link', methods=['POST'])
+def add_file_link_route():
+    return add_file_link()
+
+@app.route('/list-files', methods=['POST'])
+def list_files_route():
+    return list_files()
+
+@app.route('/weather', methods=['POST'])
+def get_weather_route():
+    return get_weather()
+
+@app.route('/motivational-quote', methods=['POST'])
+def get_motivational_quote_route():
+    return get_motivational_quote()
+
+@app.route('/bot-intro', methods=['POST'])
+def bot_intro():
+    data = request.form
+    channel_id = data.get('channel_id')
+    intro_message = get_bot_intro()
+    client.chat_postMessage(channel=channel_id, text=intro_message)
+    return Response(), 200
