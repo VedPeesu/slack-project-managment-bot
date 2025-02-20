@@ -199,3 +199,35 @@ def handle_message(event_data):
                 client.chat_postMessage(channel=channel, text=overdue_message)
 
     return Response(), 200
+
+
+schedule.every().monday.at("09:00").do(lambda: send_standup_prompt(client, SLACK_CHANNEL))
+schedule.every().tuesday.at("09:00").do(lambda: send_standup_prompt(client, SLACK_CHANNEL))
+schedule.every().wednesday.at("09:00").do(lambda: send_standup_prompt(client, SLACK_CHANNEL))
+schedule.every().thursday.at("09:00").do(lambda: send_standup_prompt(client, SLACK_CHANNEL))
+schedule.every().friday.at("09:00").do(lambda: send_standup_prompt(client, SLACK_CHANNEL))
+
+scheduler.add_job(
+    func=lambda: send_weekly_standup_prompt(client, SLACK_CHANNEL),
+    day_of_week='mon',
+    hour=9,
+    minute=0
+)
+
+scheduler.add_job(
+    func=lambda: send_monthly_standup_prompt(client, SLACK_CHANNEL),
+    day=1,
+    hour=9,
+    minute=0
+)
+
+def run_scheduler():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
+scheduler_thread.start()
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5003) 
