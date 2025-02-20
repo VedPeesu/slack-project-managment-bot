@@ -209,6 +209,7 @@ schedule.every().friday.at("09:00").do(lambda: send_standup_prompt(client, SLACK
 
 scheduler.add_job(
     func=lambda: send_weekly_standup_prompt(client, SLACK_CHANNEL),
+    trigger='cron',
     day_of_week='mon',
     hour=9,
     minute=0
@@ -216,6 +217,7 @@ scheduler.add_job(
 
 scheduler.add_job(
     func=lambda: send_monthly_standup_prompt(client, SLACK_CHANNEL),
+    trigger='cron',
     day=1,
     hour=9,
     minute=0
