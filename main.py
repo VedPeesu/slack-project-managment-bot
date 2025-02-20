@@ -169,3 +169,33 @@ def bot_intro():
     intro_message = get_bot_intro()
     client.chat_postMessage(channel=channel_id, text=intro_message)
     return Response(), 200
+
+@slack_event_adapter.on('message')
+def handle_message(event_data):
+    event = event_data['event']
+    
+    if 'subtype' in event:
+        return
+    
+    user = event.get('user')
+    text = event.get('text')
+    channel = event.get('channel')
+    
+    if channel == SLACK_CHANNEL:  
+        logging.info(f"Received message from user {user}: {text}")
+        
+        if any(word in text.lower() for word in ['good job', 'great work', 'excellent', 'awesome']):
+            try:
+                client.reactions_add(channel=channel, timestamp=event['ts'], name='thumbsup')
+            except:
+                pass
+        
+        if any(word in text.lower() for word in ['overdue', 'late', 'missed deadline']):
+            overdue_tasks = [t for t in tasks.values() if t.get('due_date') and datetime.fromisoformat(t['due_date']).date() < date.today() and t['status'].lower() != 'completed']
+            if overdue_tasks:
+                overdue_message = "⚠️ **Overdue Tasks Detected:**\n"
+                for task in overdue_tasks[:5]:
+                    overdue_message += f"• {task['description']} (Due: {task['due_date'][:10]})\n"
+                client.chat_postMessage(channel=channel, text=overdue_message)
+
+    return Response(), 200
